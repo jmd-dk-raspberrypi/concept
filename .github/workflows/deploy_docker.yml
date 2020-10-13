@@ -42,6 +42,7 @@ jobs:
             run: docker pull ${docker_username}/concept:test-build
           - name: 🔧 Compile
             run: |
+                docker rm -f concept-tmp 2>/dev/null || :
                 docker run \
                     -v "${GITHUB_WORKSPACE}":/github \
                     --name concept-tmp \
@@ -55,12 +56,13 @@ jobs:
                         && concept \
                         && (cd "${concept_dir}" && make clean_logs clean_params_cp) \
                     '
-          - name: 🚀 Deploy Docker image
-            run: |
                 docker commit \
                     --change='CMD ["bash"]' \
                     concept-tmp \
                     ${docker_username}/concept:latest
+                docker rm -f concept-tmp 2>/dev/null || :
+          - name: 🚀 Deploy Docker image
+            run: |
                 docker login \
                     -u ${{ secrets.DOCKER_USERNAME }} \
                     -p ${{ secrets.DOCKER_PASSWORD }} \
