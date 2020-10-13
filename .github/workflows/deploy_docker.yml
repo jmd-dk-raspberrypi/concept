@@ -34,7 +34,9 @@ jobs:
           - name: Checkout 🛎
             uses: actions/checkout@v2
           - name: 🐋 Pull Docker image
-            run: docker pull ${docker_username}/concept:test-build
+            run: |
+                echo "A${docker_username}B"
+                docker pull ${docker_username}/concept:test-build
           - name: 🔧 Compile
             run: |
                 docker run \
