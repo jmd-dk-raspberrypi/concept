@@ -11,7 +11,7 @@ jobs:
     deploy_docker:
         runs-on: ubuntu-20.04
         steps:
-          - name: 🚀 Deploy Docker image
+          - name: 🚀 Deploy Docker image some change
             env:
                 docker_username: ${{ secrets.DOCKER_USERNAME }}
             if: env.docker_username
