@@ -19,10 +19,10 @@ jobs:
                 docker_username: ${{ secrets.DOCKER_USERNAME }}
             run: |
                 if [ -n "${docker_username}" ]; then
-                    echo "Set for deployment"
+                    echo "Will be deployed"
                     echo "::set-output name=deploy::1"
                 else
-                    echo "Not set for deployment"
+                    echo "Will not be deployed"
                 fi
 
     deploy_docker:
@@ -30,7 +30,7 @@ jobs:
         needs: check_deploy
         if: needs.check_deploy.outputs.deploy
         steps:
-          - name: Checkout 🛎
+          - name: 🛎 Checkout
             uses: actions/checkout@v2
           - name: 📝 Set Docker username
             env:
@@ -40,8 +40,9 @@ jobs:
                 echo "docker_username=${docker_username}" >> "${GITHUB_ENV}"
           - name: 🐋 Pull Docker image
             run: docker pull ${docker_username}/concept:test-build
-          - name: 🔧 Compile
+          - name: 🔧 Build code
             run: |
+                rm -f concept/docs/_static/*.pdf
                 docker rm -f concept-tmp 2>/dev/null || :
                 docker run \
                     -v "${GITHUB_WORKSPACE}":/github \
